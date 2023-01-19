@@ -25,18 +25,34 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StorePostRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $post = new Post;
+        $post->titulo = $request->titulo;
+        $post->extracto = $request->extracto;
+        $post->contenido = $request->contenido;
+        if(isset($request->caducable)){
+        $post->caducable = $request->caducable;}
+        else{$post->caducable=false;}
+        if(isset($request->comentable)){
+            $post->comentable = $request->comentable;}
+        else{$post->comentable=false;}
+        $post->visibilidad = $request->visibilidad;
+        $post->user_id=auth()->user()->id;
+        $post->save();
+       /* $validated = $request->validate();
+
+           $request->user()->post()->create($validated);*/
+        return redirect(route('dashboard'));
     }
 
     /**
